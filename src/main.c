@@ -1,0 +1,138 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: linh <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/03/07 13:04:38 by linh              #+#    #+#             */
+/*   Updated: 2018/03/07 13:05:16 by linh             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "mlx.h"
+#include "unistd.h"
+#include "fdf.h"
+#include <fcntl.h>
+#include <stdio.h>
+
+
+
+t_img   *init_img(t_mlx *mlx)
+{
+    t_img *tmp;
+
+    if (!(tmp = malloc(sizeof(t_img))))
+        return NULL;
+    tmp->img = mlx_new_image(mlx->mlx_ptr, WIDTH, HEIGHT);
+    tmp->img_ptr = mlx_get_data_addr(tmp->img, &tmp->bpp, &tmp->stride, &tmp->endian);
+    tmp->bpp = tmp->bpp/8;
+    return (tmp);
+}
+
+
+t_mlx   *init_mlx(char *str)
+{
+    t_mlx *tmp;
+
+    tmp = malloc(sizeof(t_mlx));
+    if (!tmp)
+        return NULL;
+    tmp->mlx_ptr = mlx_init();
+    tmp->win_ptr = mlx_new_window(tmp->mlx_ptr, WIDTH, HEIGHT, str);
+    tmp->img = init_img(tmp);
+    return (tmp);
+}
+
+t_map *init_map()
+{
+    t_map *tmp;
+    tmp = malloc(sizeof(t_map));
+    if (!tmp)
+        return NULL;
+    else
+        tmp->height = 0;
+        tmp->d_min = 0;
+        tmp->d_max = 0;
+        return (tmp);
+}
+
+
+int deal_key(int key, void *param)
+{
+    if (key == 53)
+        exit(EXIT_SUCCESS);
+    else
+        printf("%d\n", key);
+    return (0);
+}
+
+int		main(int argc, char **argv)
+{
+    t_map *map;
+    t_mlx *mlx;
+    int fd;
+
+    fd = open(argv[1], O_RDONLY);
+    mlx = init_mlx(argv[1]);
+
+    map = init_map();
+    mlx->map = map;
+
+    // while (read_file(fd, map))
+    //     draw_line(mlx);
+    // printf("width: %d | height: %d | d_min: %d | d_max: %d\n", map->width, map->height, map->d_min, map-> d_max);
+
+    read_file(fd = open(argv[1], O_RDONLY), map);
+    build_map(mlx, map->coords = init_arr(map->width * map->height), fd = open(argv[1], O_RDONLY));
+
+    printf("width: %d | height: %d | d_min: %d | d_max: %d\n", map->width, map->height, map->d_min, map->d_max);
+
+
+
+
+
+    int i = 0;
+    while (i < map->width * map->height)
+    {
+        printf("x: %d y: %d z: %d color: %d\n", i % map->width, i / (map->width), map->coords[i][0], map->coords[i][1]);
+
+        plot_pixel(mlx, i % map->width, i / (map->width));
+        i++;
+    }
+
+    // mlx->map = map;
+//     int x =  10;
+//     int y = 10;
+//
+//     int i = (x * 4) + (y * mlx->img->stride);
+//
+//     // *(int *)(mlx->img->img_ptr + ((x + y * 1280) * mlx->img->bpp)) = 16711680;
+//
+//     // printf("%d\n", (int)mlx->img->img_ptr);
+//     // printf("bpp %d\n", mlx->img->bpp);
+//     // *(int *)(mlx->img->img_ptr + (int)x * mlx->img->bpp + (int)y * mlx->img->stride) = 16711680;
+//
+//     // mlx->img->img_ptr + ((1 + 1 * 1280) * mlx->img->bpp)) = 268435455;
+//     //
+//
+//     ((int *)(mlx->img->img_ptr))[i] = 250;
+//     ((int *)(mlx->img->img_ptr))[++i] = 250;
+//     ((int *)(mlx->img->img_ptr))[++i] = 250;
+//
+//     // mlx->img->bpp = mlx->img->bpp/8;
+//
+    mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img->img, 0 , 0);
+//     //read file
+// //    read_file(fd, &map);
+//
+//     // //initiallized mlx
+//     // init_mlx(argv[1]);
+//
+//     // mlx->map = map;
+//     //
+
+    mlx_key_hook(mlx->win_ptr, deal_key, (void *)0);
+    mlx_loop(mlx->mlx_ptr);
+    return (0);
+}

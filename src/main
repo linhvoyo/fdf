@@ -1,0 +1,224 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: linh <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/22 20:10:10 by linh              #+#    #+#             */
+/*   Updated: 2018/02/24 06:10:44 by linh             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "mlx.h"
+#include "unistd.h"
+#include "fdf.h"
+//#include "get_next_line.h"
+#include <fcntl.h>
+#include <stdio.h>
+
+/*
+int deal_key(int key, void *param)
+{
+    write(1, "X", 1);
+    return (0);
+}
+
+*/
+
+void    draw_line(void *mlx_ptr, void *win_ptr)
+{
+    int i;
+    int x;
+
+    x = 0;
+    i = 0;
+    while (i < 10)
+    {
+        mlx_pixel_put(mlx_ptr, win_ptr, 20 + x++, 20 ,  0x00FFFF);
+        i++;
+    }
+
+}
+
+int count_x(char *line)
+{
+    int i;
+    int count;
+    int len;
+
+    count = 0;
+    len = ft_strlen(line);
+    i = 0;
+    while (i < len - 1)
+    {
+        if (ft_isdigit(line[i]) && (line[i + 1] == ' ' || line[i + 1] == '\0'))
+        {
+            count++;
+        }
+        i++;
+    }
+    return (count + 1);
+}
+
+
+// void parse_line(char *line, int y)
+// {
+//     t_coord *coord;
+//     int x;
+//
+//     x = 0;
+//     coord = create_coord(x, y, line[x], 0xFFFFFFF);
+//
+//     printf("x: %d|y: %d|z: %d|color: ")
+// }
+
+
+int **parse_line(char *line, int color, int **coords)
+{
+    int x;
+
+    x = 0;
+
+    //coords[x] = [line[x], 0xFFFFFFF];
+
+
+    char **line_split = ft_strsplit(line, ' ');
+
+    int i = 0;
+    while (line_split[i])
+    {
+        coords[i][0] = ft_atoi(line_split[i]);
+        coords[i][1] = color;
+        printf("%d  ", ft_atoi(line_split[i++]));
+    }
+    printf("\n");
+    // int tmp[2] = {ft_atoi(line_split[0]), 0xFFFFFFF};
+    //
+    // printf("%d | %d ", tmp[0], tmp[1]);
+
+    // int tmp[2] = {ft_atoi(line_split[0]), 0xFFFFFFF};
+    // coords[0][0] = ft_atoi(line_split[0]);
+    // coords[0][1] = 0xFFFFFFF;
+    //
+    // printf("%d \n", coords[x][0]);
+    // printf("%d \n", coords[x][1]);
+    //
+    // coords[1][0] = ft_atoi(line_split[1]);
+    // coords[1][1] = 0xFFFFFFF;
+    //
+    // printf("%d \n", coords[1][0]);
+    // printf("%d \n", coords[1][1]);
+    return (coords);
+}
+
+int **init_arr(int x)
+{
+    int **line;
+    int i;
+    line = (int **)malloc(sizeof(int *) * x);
+
+    i = 0;
+    if (line)
+    {
+        while (i < x)
+            if ((line[i] = (int *)malloc(sizeof(int) * 2)))
+                i++;
+            else
+                return (NULL);
+    }
+    return (line);
+}
+
+typedef int v4si __attribute__((vector_size(16)));
+
+int main()
+{
+    v4si m1, m2 = {};
+    v4si prod;
+
+    m1[0] = 5;
+    m2[0] = 3;
+
+    m1[1] = 2;
+    m2[1] = 6;
+
+    prod = m1 * m2;
+    printf("%d %d\n", prod[0], prod[1]);
+
+    void *mlx_ptr;
+    void *win_ptr;
+
+    mlx_ptr = mlx_init();
+    win_ptr = mlx_new_window(mlx_ptr, 500, 500, "mlx 42");
+//    mlx_pixel_put(mlx_ptr, win_ptr, 250, 250, 0xFFFFFFF);
+
+
+
+
+
+    // mlx_loop(mlx_ptr);
+
+    draw_line(mlx_ptr, win_ptr);
+
+
+    // int fd;
+    // fd = open("./maps/42.fdf", O_RDONLY);
+    //
+    // char *line;
+    // get_next_line(fd, &line);
+    //
+    // printf("%d\n", count_x(line));
+    // if (!count_x(line))
+    //     return (0);
+    // //
+    //
+    //
+    // printf("%s\n", line);
+
+
+
+
+    // int **arr;
+    // arr = init_arr(count_x(line));
+
+
+    // parse_line(line, 0xFFFFFFF, arr);
+    // int i;
+    // i = 0;
+    // while (i < count_x(line))
+    // {
+    //     printf("x: %d y: %d z: %d color: %d\n", 0, i, arr[i][0], arr[i][1]);
+    //     i++;
+    // }
+   mlx_loop(mlx_ptr);
+
+
+
+
+
+
+
+    // int x;
+    // x = 0;
+    // int i;
+    // int n;
+    //
+    // n = count_x(line);
+    // arr = init_arr(n);
+    // while (get_next_line(fd, &line))
+    // {
+    //     parse_line(line, 0xFFFFFFF, arr);
+    //     //To print
+    //     i = 0;
+    //     while (i < n)
+    //     {
+    //         printf("x: %d y: %d z: %d color: %d\n", x, i, arr[i][0], arr[i][1]);
+    //         i++;
+    //     }
+    //     x++;
+    // }
+
+
+
+}

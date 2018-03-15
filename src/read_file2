@@ -1,0 +1,119 @@
+#include "fdf.h"
+#include <stdio.h>
+
+int count_x(char *line)
+{
+    int i;
+    int count;
+    int len;
+
+    count = 0;
+    len = ft_strlen(line);
+    i = 0;
+    while (i < len - 1)
+    {
+        if (ft_isdigit(line[i]) && (line[i + 1] == ' ' || line[i + 1] == '\0'))
+        {
+            count++;
+        }
+        i++;
+    }
+    return (count + 1);
+}
+
+int **init_arr(int x)
+{
+    int **line;
+    int i;
+    line = (int **)malloc(sizeof(int *) * x);
+
+    i = 0;
+    if (line)
+    {
+        while (i < x)
+            if ((line[i] = (int *)malloc(sizeof(int) * 2)))
+                i++;
+            else
+                return (NULL);
+    }
+    return (line);
+}
+
+
+int **parse_line(char *line, int color, int **coords)
+{
+    int x;
+
+    x = 0;
+    char **line_split = ft_strsplit(line, ' ');
+
+    int i = 0;
+    while (line_split[i])
+    {
+        coords[i][0] = ft_atoi(line_split[i]);
+        coords[i++][1] = color;
+    }
+    return (coords);
+}
+
+// int read_file(int fd, t_map *map)
+// {
+//     char *line;
+//
+//     int **arr;
+//     int y = 0;
+//     int x;
+//
+//     while (get_next_line(fd, &line))
+//     {
+//         if (y == 0)
+//             arr = init_arr(map->width = count_x(line));
+//         parse_line(line, 0xFFFFFFF, arr);
+//         x = 0;
+//         while (x < map->width)
+//         {
+//             printf("x: %d y: %d z: %d color: %d\n", x, y, arr[x][0], arr[x][1]);
+//             if (y == 0 && (map->d_min = arr[x][0]))
+//                 map->d_max = arr[x][0];
+//             if (arr[x][0] < map->d_min)
+//                 map->d_min = arr[x][0];
+//             else if (arr[x][0] > map->d_max)
+//                 map->d_max = arr[x][0];
+//             x++;
+//         }
+//         y++;
+//     }
+//     map->height = y;
+//     return (1);
+// }
+
+
+int read_file(int fd, t_map *map)
+{
+    char *line;
+    int x;
+    int ret;
+    ret = get_next_line(fd, &line);
+    if (!ret)
+        return (0);
+    printf("%s\n", line);
+    if (map->height == 0)
+        map->arr = init_arr(map->width = count_x(line));
+
+    parse_line(line, 0xFFFFFFF, map->arr);
+    x = 0;
+    while (x < map->width)
+    {
+        // printf("x: %d y: %d z: %d color: %d\n", x, map->height, map->arr[x][0], map->arr[x][1]);
+        if (map->height == 0 && (map->d_min = map->arr[x][0]))
+            map->d_max = map->arr[x][0];
+        if (map->arr[x][0] < map->d_min)
+            map->d_min = map->arr[x][0];
+        else if (map->arr[x][0] > map->d_max)
+            map->d_max = map->arr[x][0];
+        x++;
+    }
+    // map->map->arr = map->arr;
+    map->height++;
+    return (1);
+}
