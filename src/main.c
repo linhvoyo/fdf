@@ -67,6 +67,11 @@ int deal_key(int key, void *param)
     return (0);
 }
 
+void clear_image(t_img *img)
+{
+    ft_bzero(img->img_ptr, WIDTH * HEIGHT * img->bpp);
+}
+
 int		main(int argc, char **argv)
 {
     t_map *map;
@@ -97,9 +102,11 @@ int		main(int argc, char **argv)
     {
         printf("x: %d y: %d z: %d color: %d\n", i % map->width, i / (map->width), map->coords[i][0], map->coords[i][1]);
 
-        plot_pixel(mlx, i % map->width, i / (map->width));
+        plot_pixel(mlx, (i % map->width) + 1, i / (map->width) + 1);
         i++;
     }
+
+    rotate(mlx);
 
     // mlx->map = map;
 //     int x =  10;

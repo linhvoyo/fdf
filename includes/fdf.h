@@ -14,7 +14,9 @@
 # define FDF_H
 # include "libft.h"
 # include "mlx.h"
-#include <fcntl.h>
+# include <fcntl.h>
+# include <math.h>
+
 # define HEIGHT 750
 # define WIDTH 1280
 
@@ -67,5 +69,8 @@ void draw_line(t_mlx *mlx);
 void add_to_list(t_coord **list, t_coord *new);
 int **init_arr(int x);
 int build_map(t_mlx *mlx, int **arr, int fd);
+void rotate(t_mlx *mlx);
+void plot_pixel(t_mlx *mlx, int x, int y);
+void clear_image(t_img *img);
 
 #endif
