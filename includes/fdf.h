@@ -21,14 +21,6 @@
 # define WIDTH 1280
 # define PI 3.1415
 
-typedef struct      s_coord
-{
-    int             **arr;
-    struct s_coord  *next;
-}                   t_coord;
-
-
-t_coord *get_coord(int size);
 
 typedef double v4si __attribute__((vector_size(16)));
 
@@ -40,6 +32,11 @@ typedef struct      s_map
     int             d_min;
     int             d_max;
     float           scale_factor;
+    float           degrees_x;
+    float           degrees_y;
+    float           degrees_z;
+    float           offset_x;
+    float           offset_y;
     int             **tmp;
     int             **coords;
     // struct t_coord  *coords;
@@ -64,24 +61,33 @@ typedef struct      s_mlx
     double		    **zbuf;
 }                   t_mlx;
 
-// int read_file(int fd, t_map *map);
+
 int read_file(int fd, t_map *map);
-// void draw_line(t_mlx *mlx);
-// void add_to_list(t_coord **list, t_coord *new);
-void add_to_list(t_coord **list, t_coord *new);
-int **init_arr(int x);
 int build_map(t_mlx *mlx, int **arr, int fd);
-// void rotate(t_mlx *mlx);
-void rotate_z(t_mlx *mlx, float x, float y, float theta);
-void plot_pixel(t_mlx *mlx, int x, int y);
-void clear_image(t_img *img);
-int degrees_to_radians(int degrees);
+// int build_map(t_mlx *mlx, int **arr, char *str);
+int **parse_line(char *line, int color, int **coords);
+int **init_arr(int x);
+int count_x(char *line);
+
+float degrees_to_radians(float degrees);
+
 void set_scale(t_map *map);
 
+void plot_pixel(t_mlx *mlx, int x, int y);
+int sign(int x);
 void draw_line(t_mlx *mlx, int x1, int y1, int x2, int y2);
-// int deal_key(int key, void *param);
-
-int deal_key(int key, t_mlx *mlx);
+void transform(t_mlx *mlx, float *coord, int i);
 void render(t_mlx *mlx);
+
+void reset_img(t_mlx *mlx);
+int deal_key(int key, t_mlx *mlx);
+int mouse_up(int mouse, int x, int y, t_mlx *mlx);
+
+void clear_image(t_img *img);
+
+t_img   *init_img(t_mlx *mlx);
+t_mlx   *init_mlx(char *str);
+t_map *init_map();
+void clear_image(t_img *img);
 
 #endif

@@ -17,62 +17,6 @@
 #include <stdio.h>
 
 
-
-t_img   *init_img(t_mlx *mlx)
-{
-    t_img *tmp;
-
-    if (!(tmp = malloc(sizeof(t_img))))
-        return NULL;
-    tmp->img = mlx_new_image(mlx->mlx_ptr, WIDTH, HEIGHT);
-    tmp->img_ptr = mlx_get_data_addr(tmp->img, &tmp->bpp, &tmp->stride, &tmp->endian);
-    tmp->bpp = tmp->bpp/8;
-    return (tmp);
-}
-
-
-t_mlx   *init_mlx(char *str)
-{
-    t_mlx *tmp;
-
-    tmp = malloc(sizeof(t_mlx));
-    if (!tmp)
-        return NULL;
-    tmp->mlx_ptr = mlx_init();
-    tmp->win_ptr = mlx_new_window(tmp->mlx_ptr, WIDTH, HEIGHT, str);
-    tmp->img = init_img(tmp);
-    return (tmp);
-}
-
-t_map *init_map()
-{
-    t_map *tmp;
-    tmp = malloc(sizeof(t_map));
-    if (!tmp)
-        return NULL;
-    else
-        tmp->height = 0;
-        tmp->d_min = 0;
-        tmp->d_max = 0;
-        tmp->scale_factor = 0;
-        return (tmp);
-}
-
-
-// int deal_key(int key, void *param)
-// {
-//     if (key == 53)
-//         exit(EXIT_SUCCESS);
-//     else
-//         printf("%d\n", key);
-//     return (0);
-// }
-
-void clear_image(t_img *img)
-{
-    ft_bzero(img->img_ptr, WIDTH * HEIGHT * img->bpp);
-}
-
 int		main(int argc, char **argv)
 {
     t_map *map;
@@ -80,147 +24,25 @@ int		main(int argc, char **argv)
     int fd;
 
     fd = open(argv[1], O_RDONLY);
-    mlx = init_mlx(argv[1]);
 
+    if (argc != 2 || fd <= 0)
+    {
+        ft_putstr("MAP_ERROR\n");
+        return (0);
+    }
+    printf("int fd %d\n", fd);
+    mlx = init_mlx(argv[1]);
     map = init_map();
     mlx->map = map;
-
-    // while (read_file(fd, map))
-    //     draw_line(mlx);
-    // printf("width: %d | height: %d | d_min: %d | d_max: %d\n", map->width, map->height, map->d_min, map-> d_max);
-
-    read_file(fd = open(argv[1], O_RDONLY), map);
+    read_file(fd, map);
     build_map(mlx, map->coords = init_arr(map->width * map->height), fd = open(argv[1], O_RDONLY));
     set_scale(map);
-
     printf("width: %d | height: %d | d_min: %d | d_max: %d\n", map->width, map->height, map->d_min, map->d_max);
 
 
-
     render(mlx);
-
-    // //negative slope
-    // draw_line(mlx, 407, 406, 470, 375);
-    // //horizontal
-    // draw_line(mlx, 407, 375, 470, 375);
-    // draw_line(mlx, 407, 375, 470, 406);
-    // //vertical
-    // draw_line(mlx, 407, 375, 407, 406);
-
-    // int row;
-    // int column;
-    //
-    // row = 0;
-    // column = 0;
-    // int i = 0;
-    // while (i < map->width * map->height)
-    // {
-    //     // printf("x: %d y: %d z: %d color: %d\n", i % map->width, i / (map->width), map->coords[i][0], map->coords[i][1]);
-    //     float x = i % map->width;
-    //     float y = i / map->width;
-    //     float z = map->coords[i][0];
-    //
-    //     printf("x: %f y: %f z: %f\n", x, y, z);
-    //     // if (i % 18 == 0)
-    //     //     printf("\n");
-    //
-    //     //scale image
-    //     float x_scale = x * 5;
-    //     float y_scale = y * 5;
-    //     float z_scale = z * 5;
-    //
-    //
-    //     // plot_pixel(mlx, x_scale, y_scale);
-    //     printf("x_scale: %f y_scale: %f z_scale: %f\n", x_scale, y_scale, z_scale);
-    //
-    //     // //rotate
-    //     // float theta = 3.14;
-    //     // float x_rotatez = x_scale * cos(theta) - y_scale * sin(theta);
-    //     // float y_rotatez = x_scale * sin(theta) + y_scale * cos(theta);
-    //     // plot_pixel(mlx, x_rotatez, y_rotatez);
-    //     //
-    //     //
-    //     //
-    //     // //center
-    //     // float x_center = x_scale + WIDTH / 2;
-    //     // float y_center = HEIGHT / 2 - y_scale;
-    //     // // plot_pixel(mlx, x_center, y_center);
-    //     //
-    //
-    //     //rotate_x
-    //     float theta = degrees_to_radians(90);
-    //     float z_rotatex = (y_scale * cos(theta) + z_scale * sin(theta));
-    //     float y_rotatex = (y_scale * cos(theta) - z_scale * sin(theta));
-    //     float x_rotatex = x_scale;
-    //     printf("x_rotatex: %f y_rotatex: %f z_rotatex: %f\n", x_rotatex, y_rotatex, z_rotatex);
-    //
-    //     // //rotate x
-    //     // float theta = -0.6578;
-    //     // float z_rotatex = (y_scale * cos(theta) - z_scale * sin(theta));
-    //     // float y_rotatex = (y_scale * cos(theta) - z_scale * sin(theta));
-    //     // float x_rotatex = x_scale;
-    //     // plot_pixel(mlx, x_rotatex, y_rotatex);
-    //     //
-    //     //
-    //     //center the image
-    //     // float x_center = x_rotatex + WIDTH / 2;
-    //     float x_center = x_rotatex + WIDTH / 2 - (map->width * 5) / 2;
-    //     float y_center = HEIGHT / 2 + y_rotatex;
-    //     // float y_center = y_rotatex + HEIGHT / 2 - (map->height * scale_factor) / 2;
-    //     plot_pixel(mlx, x_center, y_center);
-    //
-    //
-    //     printf("x_center: %f y_center: %f z_center: %f\n", x_center, y_center, z_rotatex);
-    //
-    //     //
-    //     // theta = 3 * PI / 2;
-    //     // float z_flip = (y_center * cos(theta) - z_rotatex * sin(theta));
-    //     // float y_flip = (y_center * cos(theta) - z_rotatex * sin(theta));
-    //     // plot_pixel(mlx, x_center, y_flip);
-    //     //
-    //     // // rotate_z(mlx, x_center, y_center, 0.7854);
-    //     // // plot_pixel(mlx, (i % map->width), i / (map->width));
-    //     printf("\n");
-    //     i++;
-    // }
-
-
-    // rotate(mlx);
-
-    // mlx->map = map;
-//     int x =  10;
-//     int y = 10;
-//
-//     int i = (x * 4) + (y * mlx->img->stride);
-//
-//     // *(int *)(mlx->img->img_ptr + ((x + y * 1280) * mlx->img->bpp)) = 16711680;
-//
-//     // printf("%d\n", (int)mlx->img->img_ptr);
-//     // printf("bpp %d\n", mlx->img->bpp);
-//     // *(int *)(mlx->img->img_ptr + (int)x * mlx->img->bpp + (int)y * mlx->img->stride) = 16711680;
-//
-//     // mlx->img->img_ptr + ((1 + 1 * 1280) * mlx->img->bpp)) = 268435455;
-//     //
-//
-//     ((int *)(mlx->img->img_ptr))[i] = 250;
-//     ((int *)(mlx->img->img_ptr))[++i] = 250;
-//     ((int *)(mlx->img->img_ptr))[++i] = 250;
-//
-//     // mlx->img->bpp = mlx->img->bpp/8;
-//
-    // mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img->img, 0 , 0);
-//     //read file
-// //    read_file(fd, &map);
-//
-//     // //initiallized mlx
-//     // init_mlx(argv[1]);
-//
-//     // mlx->map = map;
-//     //
-
-
-
     mlx_key_hook(mlx->win_ptr, deal_key, mlx);
+    mlx_mouse_hook(mlx->win_ptr, mouse_up, mlx);
     // mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img->img, 0 , 0);
     mlx_loop(mlx->mlx_ptr);
     return (0);

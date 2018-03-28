@@ -94,6 +94,9 @@ int build_map(t_mlx *mlx, int **arr, int fd)
     int j;
 
     i = 0;
+    if (fd <= 0)
+        return (0);
+
     while (get_next_line(fd, &line))
     {
         printf("%s\n", line);
@@ -116,7 +119,6 @@ int build_map(t_mlx *mlx, int **arr, int fd)
 int read_file(int fd, t_map *map)
 {
     char *line;
-
     int y;
     int x;
 
