@@ -99,13 +99,7 @@ int		main(int argc, char **argv)
 
     render(mlx);
 
-    // //negative slope
-    // draw_line(mlx, 407, 406, 470, 375);
-    // //horizontal
-    // draw_line(mlx, 407, 375, 470, 375);
-    // draw_line(mlx, 407, 375, 470, 406);
-    // //vertical
-    // draw_line(mlx, 407, 375, 407, 406);
+    // draw_line(mlx, 345, 375, 376, 375);
 
     // int row;
     // int column;
@@ -221,7 +215,7 @@ int		main(int argc, char **argv)
 
 
     mlx_key_hook(mlx->win_ptr, deal_key, mlx);
-    // mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img->img, 0 , 0);
+    mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img->img, 0 , 0);
     mlx_loop(mlx->mlx_ptr);
     return (0);
 }

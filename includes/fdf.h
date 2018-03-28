@@ -19,6 +19,7 @@
 
 # define HEIGHT 750
 # define WIDTH 1280
+# define PI 3.1415
 
 typedef struct      s_coord
 {
@@ -38,6 +39,7 @@ typedef struct      s_map
     int             height;
     int             d_min;
     int             d_max;
+    float           scale_factor;
     int             **tmp;
     int             **coords;
     // struct t_coord  *coords;
@@ -64,13 +66,22 @@ typedef struct      s_mlx
 
 // int read_file(int fd, t_map *map);
 int read_file(int fd, t_map *map);
-void draw_line(t_mlx *mlx);
+// void draw_line(t_mlx *mlx);
 // void add_to_list(t_coord **list, t_coord *new);
 void add_to_list(t_coord **list, t_coord *new);
 int **init_arr(int x);
 int build_map(t_mlx *mlx, int **arr, int fd);
-void rotate(t_mlx *mlx);
+// void rotate(t_mlx *mlx);
+void rotate_z(t_mlx *mlx, float x, float y, float theta);
 void plot_pixel(t_mlx *mlx, int x, int y);
 void clear_image(t_img *img);
+int degrees_to_radians(int degrees);
+void set_scale(t_map *map);
+
+void draw_line(t_mlx *mlx, int x1, int y1, int x2, int y2);
+// int deal_key(int key, void *param);
+
+int deal_key(int key, t_mlx *mlx);
+void render(t_mlx *mlx);
 
 #endif
