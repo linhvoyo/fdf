@@ -10,15 +10,13 @@ int count_x(char *line)
     count = 0;
     len = ft_strlen(line);
     i = 0;
-    while (i < len - 1)
+    while (line[i])
     {
-        if (ft_isdigit(line[i]) && (line[i + 1] == ' ' || line[i + 1] == '\0'))
-        {
+        if ((ft_isdigit(line[i]) || ft_isalpha(line[i])) && (line[i + 1] == ' ' || line[i + 1] == '\0'))
             count++;
-        }
         i++;
     }
-    return (count + 1);
+    return (count);
 }
 
 int **init_arr(int x)
@@ -31,7 +29,7 @@ int **init_arr(int x)
     if (line)
     {
         while (i < x)
-            if ((line[i] = (int *)malloc(sizeof(int) * 2)))
+            if ((line[i] = (int *)malloc(sizeof(int) * 3)))
                 i++;
             else
                 return (NULL);
@@ -46,12 +44,31 @@ int **parse_line(char *line, int color, int **coords)
 
     x = 0;
     char **line_split = ft_strsplit(line, ' ');
+    char *split;
 
     int i = 0;
     while (line_split[i])
     {
-        coords[i][0] = ft_atoi(line_split[i]);
-        coords[i++][1] = color;
+        if (!(split = ft_strrchr(line_split[i], ',')))
+        {
+            coords[i][0] = ft_atoi(line_split[i]);
+            coords[i][1] = 255;
+            coords[i][2] = 255;
+            coords[i][3] = 255;
+        }
+        else
+        {
+            coords[i][0] = ft_atoi(line_split[i]);
+
+            //ADD ERROR HANDLING FOR printf("split: %s ", split);
+            while (*split != 'x')
+                split++;
+            coords[i][1] = parse_color(split + 1);
+            coords[i][2] = parse_color(split + 3);
+            coords[i][3] = parse_color(split + 5);
+        }
+        // printf("coords[i][0] %d coords[i][1] %d coords[i][2] %d coords[i][3] %d \n", coords[i][0], coords[i][1], coords[i][2], coords[i][3]);
+        i++;
     }
     return (coords);
 }
@@ -99,7 +116,7 @@ int build_map(t_mlx *mlx, int **arr, int fd)
 
     while (get_next_line(fd, &line))
     {
-        printf("%s\n", line);
+        // printf("%s\n", line);
         j = 0;
         parse_line(line, 0xFFFFFFF, mlx->map->tmp);
         while (j < mlx->map->width)
@@ -107,10 +124,13 @@ int build_map(t_mlx *mlx, int **arr, int fd)
             // printf("x: %d y: %d z: %d color: %d\n", j, i / mlx->map->width, mlx->map->tmp[j][0], mlx->map->tmp[j][1]);
             mlx->map->coords[i][0] = mlx->map->tmp[j][0];
             mlx->map->coords[i][1] = mlx->map->tmp[j][1];
+            mlx->map->coords[i][2] = mlx->map->tmp[j][2];
+            mlx->map->coords[i][3] = mlx->map->tmp[j][3];
             i++;
             j++;
         }
     }
+
     close(fd);
     return (1);
 }
@@ -127,6 +147,8 @@ int read_file(int fd, t_map *map)
     {
         if (y == 0)
             map->tmp = init_arr(map->width = count_x(line));
+        printf("%d\n", map->width);
+        // printf("%s\n", line);
         parse_line(line, 0xFFFFFFF, map->tmp);
         x = 0;
         while (x < map->width)

@@ -74,8 +74,10 @@ float degrees_to_radians(float degrees);
 void set_scale(t_map *map);
 
 void plot_pixel(t_mlx *mlx, int x, int y);
+void test_plot_pixel(t_mlx *mlx, int x, int y, float *coord);
 int sign(int x);
-void draw_line(t_mlx *mlx, int x1, int y1, int x2, int y2);
+// void draw_line(t_mlx *mlx, int x1, int y1, int x2, int y2);
+void draw_line(t_mlx *mlx, float *coor_current, float *coor_next);
 void transform(t_mlx *mlx, float *coord, int i);
 void render(t_mlx *mlx);
 
@@ -89,5 +91,9 @@ t_img   *init_img(t_mlx *mlx);
 t_mlx   *init_mlx(char *str);
 t_map *init_map();
 void clear_image(t_img *img);
+
+
+
+int parse_color(char *str);
 
 #endif
