@@ -42,104 +42,53 @@ int parse_color(char *str)
     return (num);
 }
 
-void test(char *color)
-{
-    // printf("%d\n", 0xFFFFFFF);
-    // printf("%d\n", 0xFF0000 );
-
-    //
-    // char *color = "0xFFFAFA";
-    //
-
-    while (*color)
-    {
-        if (*color == 'x')
-        {
-            color++;
-            break;
-        }
-        color++;
-    }
-
-    printf("%s\n", color);
-    int i = 0;
-
-    int power = 16;
-    int num = 0;
-    int val;
-
-    while(i < 2)
-    {
-        val = color[i] - 'A' + 10;
-        num = num + val * power;
-        power = power / power;
-        i++;
-    }
-    printf("%d\n", color[i] - 'A' + 10);
-    printf("%d\n", num);
-
-
-    printf("hello there \n\n");
-
-    //
-    // printf("%d\n", (int)"0xFFFFFFF");
-    // printf("%s\n", (char)(4775720));
-
-
-
-    // color = color + 4;
-    //     int test = parse_color(color);
-    //     printf("%d %s\n", test, color);
-
-    //
-    // printf("hello there \n\n");
-
-
-
-    while (*color)
-    {
-        int test = parse_color(color);
-        printf("%d %s\n", test, color);
-        color = color + 2;
-    }
-
-
-
-}
-
-
 int		main(int argc, char **argv)
 {
     t_map *map;
     t_mlx *mlx;
     int fd;
+    char *hex_color;
 
     fd = open(argv[1], O_RDONLY);
-
-    if (argc != 2 || fd <= 0)
-    {
+    if (argc > 3 || fd <= 0 )
         ft_putstr("MAP_ERROR\n");
-        return (0);
+    else
+    {
+        mlx = init_mlx(argv[1]);
+        map = init_map();
+        mlx->map = map;
+        if (!argv[2])
+            hex_color = "0xFFFFFF";
+        else
+            hex_color = argv[2];
+        if (!read_file(fd, map, hex_color))
+            ft_putstr("INVALID_FILE\n");
+        else
+        {
+            build_map(mlx, map->coords = init_arr(map->width * map->height), fd = open(argv[1], O_RDONLY), hex_color);
+            set_scale(map);
+            printf("width: %d | height: %d | d_min: %d | d_max: %d\n", map->width, map->height, map->d_min, map->d_max);
+            render(mlx);
+            mlx_key_hook(mlx->win_ptr, deal_key, mlx);
+            mlx_mouse_hook(mlx->win_ptr, mouse_up, mlx);
+            mlx_loop(mlx->mlx_ptr);
+        }
     }
-
-    // test("0x810202");
-
-    mlx = init_mlx(argv[1]);
-    map = init_map();
-    mlx->map = map;
-    // test_plot_pixel(mlx, 542, 325, 0xFFFFFFF);
-
-    read_file(fd, map);
-    build_map(mlx, map->coords = init_arr(map->width * map->height), fd = open(argv[1], O_RDONLY));
-    set_scale(map);
-    printf("width: %d | height: %d | d_min: %d | d_max: %d\n", map->width, map->height, map->d_min, map->d_max);
-
-    render(mlx);
-
-
-    mlx_key_hook(mlx->win_ptr, deal_key, mlx);
-    mlx_mouse_hook(mlx->win_ptr, mouse_up, mlx);
-    // mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img->img, 0 , 0);
-    mlx_loop(mlx->mlx_ptr);
+    // if (!read_file(fd, map, hex_color))
+    // {
+    //     ft_putstr("INVALID_FILE\n");
+    //     return (0);
+    // }
+    //
+    // build_map(mlx, map->coords = init_arr(map->width * map->height), fd = open(argv[1], O_RDONLY), hex_color);
+    // set_scale(map);
+    // printf("width: %d | height: %d | d_min: %d | d_max: %d\n", map->width, map->height, map->d_min, map->d_max);
+    //
+    // render(mlx);
+    //
+    //
+    // mlx_key_hook(mlx->win_ptr, deal_key, mlx);
+    // mlx_mouse_hook(mlx->win_ptr, mouse_up, mlx);
+    // mlx_loop(mlx->mlx_ptr);
     return (0);
 }

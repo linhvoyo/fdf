@@ -62,10 +62,10 @@ typedef struct      s_mlx
 }                   t_mlx;
 
 
-int read_file(int fd, t_map *map);
-int build_map(t_mlx *mlx, int **arr, int fd);
+int read_file(int fd, t_map *map, char *hex_color);
+int build_map(t_mlx *mlx, int **arr, int fd, char *hex_color);
 // int build_map(t_mlx *mlx, int **arr, char *str);
-int **parse_line(char *line, int color, int **coords);
+int **parse_line(char *line, char *hex_color, int **coords);
 int **init_arr(int x);
 int count_x(char *line);
 

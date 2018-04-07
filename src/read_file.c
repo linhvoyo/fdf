@@ -38,7 +38,7 @@ int **init_arr(int x)
 }
 
 
-int **parse_line(char *line, int color, int **coords)
+int **parse_line(char *line, char *hex_color, int **coords)
 {
     int x;
 
@@ -52,9 +52,12 @@ int **parse_line(char *line, int color, int **coords)
         if (!(split = ft_strrchr(line_split[i], ',')))
         {
             coords[i][0] = ft_atoi(line_split[i]);
-            coords[i][1] = 255;
-            coords[i][2] = 255;
-            coords[i][3] = 255;
+            while (*hex_color != 'x')
+                hex_color++;
+
+            coords[i][1] = parse_color(hex_color + 1);
+            coords[i][2] = parse_color(hex_color + 3);
+            coords[i][3] = parse_color(hex_color + 5);
         }
         else
         {
@@ -103,7 +106,7 @@ int **parse_line(char *line, int color, int **coords)
 //     return (1);
 // }
 
-int build_map(t_mlx *mlx, int **arr, int fd)
+int build_map(t_mlx *mlx, int **arr, int fd, char *hex_color)
 {
     char *line;
     int ret;
@@ -118,7 +121,7 @@ int build_map(t_mlx *mlx, int **arr, int fd)
     {
         // printf("%s\n", line);
         j = 0;
-        parse_line(line, 0xFFFFFFF, mlx->map->tmp);
+        parse_line(line, hex_color, mlx->map->tmp);
         while (j < mlx->map->width)
         {
             // printf("x: %d y: %d z: %d color: %d\n", j, i / mlx->map->width, mlx->map->tmp[j][0], mlx->map->tmp[j][1]);
@@ -136,20 +139,22 @@ int build_map(t_mlx *mlx, int **arr, int fd)
 }
 
 
-int read_file(int fd, t_map *map)
+int read_file(int fd, t_map *map, char *hex_color)
 {
     char *line;
+    int ret;
     int y;
     int x;
 
     y = 0;
-    while (get_next_line(fd, &line))
+    while ((ret = get_next_line(fd, &line)))
     {
+        if (ret < 0)
+            return (0);
         if (y == 0)
             map->tmp = init_arr(map->width = count_x(line));
-        printf("%d\n", map->width);
         // printf("%s\n", line);
-        parse_line(line, 0xFFFFFFF, map->tmp);
+        parse_line(line, hex_color, map->tmp);
         x = 0;
         while (x < map->width)
         {
