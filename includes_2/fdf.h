@@ -6,7 +6,7 @@
 /*   By: linh <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/24 07:02:37 by linh              #+#    #+#             */
-/*   Updated: 2018/04/08 15:49:57 by lilam            ###   ########.fr       */
+/*   Updated: 2018/02/24 07:02:39 by linh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ typedef struct      s_mlx
 
 
 int read_file(int fd, t_map *map, char *hex_color);
-int build_map(t_mlx *mlx, int fd, char *hex_color);
+int build_map(t_mlx *mlx, int **arr, int fd, char *hex_color);
 // int build_map(t_mlx *mlx, int **arr, char *str);
 int **parse_line(char *line, char *hex_color, int **coords);
 int **init_arr(int x);
@@ -73,8 +73,8 @@ float degrees_to_radians(float degrees);
 
 void set_scale(t_map *map);
 
-// void plot_pixel(t_mlx *mlx, int x, int y);
-void plot_pixel(t_mlx *mlx, int x, int y, float *coord);
+void plot_pixel(t_mlx *mlx, int x, int y);
+void test_plot_pixel(t_mlx *mlx, int x, int y, float *coord);
 int sign(int x);
 // void draw_line(t_mlx *mlx, int x1, int y1, int x2, int y2);
 void draw_line(t_mlx *mlx, float *coor_current, float *coor_next);
@@ -83,7 +83,7 @@ void render(t_mlx *mlx);
 
 void reset_img(t_mlx *mlx);
 int deal_key(int key, t_mlx *mlx);
-int mouse(int mouse, int x, int y, t_mlx *mlx);
+int mouse_up(int mouse, int x, int y, t_mlx *mlx);
 
 void clear_image(t_img *img);
 
@@ -95,7 +95,5 @@ void clear_image(t_img *img);
 
 
 int parse_color(char *str);
-
-void free_array(int **array, int size);
 
 #endif

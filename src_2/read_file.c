@@ -29,7 +29,7 @@ int **init_arr(int x)
     if (line)
     {
         while (i < x)
-            if ((line[i] = (int *)malloc(sizeof(int) * 4)))
+            if ((line[i] = (int *)malloc(sizeof(int) * 3)))
                 i++;
             else
                 return (NULL);
@@ -70,11 +70,9 @@ int **parse_line(char *line, char *hex_color, int **coords)
             coords[i][2] = parse_color(split + 3);
             coords[i][3] = parse_color(split + 5);
         }
-        free(line_split[i]);
         // printf("coords[i][0] %d coords[i][1] %d coords[i][2] %d coords[i][3] %d \n", coords[i][0], coords[i][1], coords[i][2], coords[i][3]);
         i++;
     }
-    free(line_split);
     return (coords);
 }
 
@@ -108,15 +106,17 @@ int **parse_line(char *line, char *hex_color, int **coords)
 //     return (1);
 // }
 
-int build_map(t_mlx *mlx, int fd, char *hex_color)
+int build_map(t_mlx *mlx, int **arr, int fd, char *hex_color)
 {
     char *line;
+    int ret;
     int i;
     int j;
 
     i = 0;
     if (fd <= 0)
         return (0);
+
     while (get_next_line(fd, &line))
     {
         // printf("%s\n", line);
@@ -133,24 +133,11 @@ int build_map(t_mlx *mlx, int fd, char *hex_color)
             j++;
         }
     }
-    // free_array(mlx->map->tmp, mlx->map->width);
+
     close(fd);
     return (1);
 }
 
-void free_array(int **array, int size)
-{
-  int i;
-
-
-  i = 0;
-  while (i < size)
-  {
-    free(array[i]);
-    i++;
-  }
-  free(array);
-}
 
 int read_file(int fd, t_map *map, char *hex_color)
 {
@@ -181,7 +168,6 @@ int read_file(int fd, t_map *map, char *hex_color)
         y++;
     }
     map->height = y;
-    // free_array(map->tmp, map->width);
     close(fd);
     return (1);
 }

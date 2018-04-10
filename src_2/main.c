@@ -6,7 +6,7 @@
 /*   By: linh <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 13:04:38 by linh              #+#    #+#             */
-/*   Updated: 2018/04/09 23:09:45 by lilam            ###   ########.fr       */
+/*   Updated: 2018/03/07 13:05:16 by linh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,15 @@ int		main(int argc, char **argv)
             ft_putstr("INVALID_FILE\n");
         else
         {
-            // printf("hello\n");
-            map->coords = init_arr(map->width * map->height);
-            build_map(mlx, fd = open(argv[1], O_RDONLY), hex_color);
+            build_map(mlx, map->coords = init_arr(map->width * map->height), fd = open(argv[1], O_RDONLY), hex_color);
             set_scale(map);
             printf("width: %d | height: %d | d_min: %d | d_max: %d\n", map->width, map->height, map->d_min, map->d_max);
             render(mlx);
             mlx_key_hook(mlx->win_ptr, deal_key, mlx);
-            // mlx_mouse_hook(mlx->win_ptr, mouse, mlx);
+            mlx_mouse_hook(mlx->win_ptr, mouse_up, mlx);
             mlx_loop(mlx->mlx_ptr);
-            // free_array(map->coords, map->width * map->height);
         }
     }
-
     // if (!read_file(fd, map, hex_color))
     // {
     //     ft_putstr("INVALID_FILE\n");
