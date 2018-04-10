@@ -40,13 +40,14 @@ int **init_arr(int x)
 
 int **parse_line(char *line, char *hex_color, int **coords)
 {
+    char *split;
+    char **line_split;
     int x;
+    int i;
 
     x = 0;
-    char **line_split = ft_strsplit(line, ' ');
-    char *split;
-
-    int i = 0;
+    line_split = ft_strsplit(line, ' ');
+    i = 0;
     while (line_split[i])
     {
         if (!(split = ft_strrchr(line_split[i], ',')))
@@ -54,7 +55,6 @@ int **parse_line(char *line, char *hex_color, int **coords)
             coords[i][0] = ft_atoi(line_split[i]);
             while (*hex_color != 'x')
                 hex_color++;
-
             coords[i][1] = parse_color(hex_color + 1);
             coords[i][2] = parse_color(hex_color + 3);
             coords[i][3] = parse_color(hex_color + 5);
@@ -62,51 +62,17 @@ int **parse_line(char *line, char *hex_color, int **coords)
         else
         {
             coords[i][0] = ft_atoi(line_split[i]);
-
-            //ADD ERROR HANDLING FOR printf("split: %s ", split);
             while (*split != 'x')
                 split++;
             coords[i][1] = parse_color(split + 1);
             coords[i][2] = parse_color(split + 3);
             coords[i][3] = parse_color(split + 5);
         }
-        free(line_split[i]);
-        // printf("coords[i][0] %d coords[i][1] %d coords[i][2] %d coords[i][3] %d \n", coords[i][0], coords[i][1], coords[i][2], coords[i][3]);
-        i++;
+        free(line_split[i++]);
     }
     free(line_split);
     return (coords);
 }
-
-// int read_file(int fd, t_map *map)
-// {
-//     char *line;
-//     int x;
-//     int ret;
-//     ret = get_next_line(fd, &line);
-//     if (!ret)
-//         return (0);
-//     printf("%s\n", line);
-//     if (map->height == 0)
-//         map->tmp = init_arr(map->width = count_x(line));
-//
-//     parse_line(line, 0xFFFFFFF, map->tmp);
-//     x = 0;
-//     while (x < map->width)
-//     {
-//         // printf("x: %d y: %d z: %d color: %d\n", x, map->height, map->tmp[x][0], map->tmp[x][1]);
-//         if (map->height == 0 && (map->d_min = map->tmp[x][0]))
-//             map->d_max = map->tmp[x][0];
-//         if (map->tmp[x][0] < map->d_min)
-//             map->d_min = map->tmp[x][0];
-//         else if (map->tmp[x][0] > map->d_max)
-//             map->d_max = map->tmp[x][0];
-//         x++;
-//     }
-//     // map->map->tmp = map->tmp;
-//     map->height++;
-//     return (1);
-// }
 
 int build_map(t_mlx *mlx, int fd, char *hex_color)
 {
@@ -119,69 +85,45 @@ int build_map(t_mlx *mlx, int fd, char *hex_color)
         return (0);
     while (get_next_line(fd, &line))
     {
-        // printf("%s\n", line);
         j = 0;
         parse_line(line, hex_color, mlx->map->tmp);
         while (j < mlx->map->width)
         {
-            // printf("x: %d y: %d z: %d color: %d\n", j, i / mlx->map->width, mlx->map->tmp[j][0], mlx->map->tmp[j][1]);
             mlx->map->coords[i][0] = mlx->map->tmp[j][0];
             mlx->map->coords[i][1] = mlx->map->tmp[j][1];
             mlx->map->coords[i][2] = mlx->map->tmp[j][2];
-            mlx->map->coords[i][3] = mlx->map->tmp[j][3];
-            i++;
-            j++;
+            mlx->map->coords[i++][3] = mlx->map->tmp[j++][3];
         }
+        free(line);
     }
-    // free_array(mlx->map->tmp, mlx->map->width);
     close(fd);
     return (1);
-}
-
-void free_array(int **array, int size)
-{
-  int i;
-
-
-  i = 0;
-  while (i < size)
-  {
-    free(array[i]);
-    i++;
-  }
-  free(array);
 }
 
 int read_file(int fd, t_map *map, char *hex_color)
 {
     char *line;
     int ret;
-    int y;
     int x;
 
-    y = 0;
     while ((ret = get_next_line(fd, &line)))
     {
         if (ret < 0)
             return (0);
-        if (y == 0)
+        if (map->height == 0)
             map->tmp = init_arr(map->width = count_x(line));
-        // printf("%s\n", line);
         parse_line(line, hex_color, map->tmp);
-        x = 0;
-        while (x < map->width)
+        x = -1;
+        while (++x < map->width)
         {
-            // printf("x: %d y: %d z: %d color: %d\n", x, y, map->tmp[x][0], map->tmp[x][1]);
             if (map->tmp[x][0] < map->d_min)
                 map->d_min = map->tmp[x][0];
             else if (map->tmp[x][0] > map->d_max)
                 map->d_max = map->tmp[x][0];
-            x++;
         }
-        y++;
+        free(line);
+        map->height++;
     }
-    map->height = y;
-    // free_array(map->tmp, map->width);
     close(fd);
     return (1);
 }

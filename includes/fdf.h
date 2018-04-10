@@ -21,10 +21,6 @@
 # define WIDTH 1280
 # define PI 3.1415
 
-
-typedef double v4si __attribute__((vector_size(16)));
-
-
 typedef struct      s_map
 {
     int             width;
@@ -39,9 +35,7 @@ typedef struct      s_map
     float           offset_y;
     int             **tmp;
     int             **coords;
-    // struct t_coord  *coords;
 }                  t_map;
-
 
 typedef struct      s_img
 {
@@ -58,7 +52,6 @@ typedef struct      s_mlx
     void            *win_ptr;
     t_img           *img;
     t_map           *map;
-    double		    **zbuf;
 }                   t_mlx;
 
 

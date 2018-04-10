@@ -71,7 +71,6 @@ void draw_line(t_mlx *mlx, float *coor_current, float *coor_next)
     i = 0;
     while (i < dx)
     {
-//        plot_pixel(mlx,x,y);
         plot_pixel(mlx, x, y, coor_current);
         while (p >= 0)
         {
@@ -89,23 +88,7 @@ void draw_line(t_mlx *mlx, float *coor_current, float *coor_next)
         i++;
     }
     plot_pixel(mlx,coor_next[0],coor_next[1], coor_next);
-    // mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img->img, 0 , 0);
 }
-
-
-// if (row < map->width && y < map->height)
-// {
-//     printf("x: %f y: %f \n", x, y);
-//     printf("x2: %f y2: %f \n", x , y + 1);
-//     row++;
-// }
-// else if (row == map->width)
-// {
-//     printf("\n");
-//     row = 0;
-//     i--;
-// }
-
 
 void transform(t_mlx *mlx, float *coord, int i)
 {
@@ -148,17 +131,6 @@ void transform(t_mlx *mlx, float *coord, int i)
     // center
     x = x + WIDTH / 2 - (mlx->map->width * mlx->map->scale_factor / 2) + mlx->map->offset_x;
     y = HEIGHT / 2 + y + mlx->map->offset_y;
-    // if (mlx->map->height > mlx->map->d_max)
-    //     y = HEIGHT / 2 - (mlx->map->height * mlx->map->scale_factor / 2) + y + mlx->map->offset_y;
-    // else
-    //     y = HEIGHT / 2 + (mlx->map->d_max * mlx->map->scale_factor / 2) + y + mlx->map->offset_y;
-    //
-    //
-
-    // //orthographic projection
-    // x = x * mlx->map->width;
-    // y = y * mlx->map->height;
-    //
 
     coord[0] = x;
     coord[1] = y;
@@ -183,8 +155,7 @@ void render(t_mlx *mlx)
     i = 0;
     row = 0;
     column = 0;
-    clear_image(mlx->img);
-
+    ft_bzero(mlx->img->img_ptr, WIDTH * HEIGHT * mlx->img->bpp);
     printf("scale_factor %f\n", mlx->map->scale_factor);
     printf("degrees_x %f degrees_y %f degrees_z %f\n", mlx->map->degrees_x, mlx->map->degrees_y, mlx->map->degrees_z);
     while (i < mlx->map->width * mlx->map->height)
@@ -211,5 +182,4 @@ void render(t_mlx *mlx)
     free(coord_current);
     free(coord_next);
     mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img->img, 0 , 0);
-    // mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img->img, mlx->map->width * mlx->map->scale_factor , mlx->map->height * mlx->map->scale_factor);
 }
