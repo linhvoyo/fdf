@@ -16,6 +16,7 @@
 # include "mlx.h"
 # include <fcntl.h>
 # include <math.h>
+# include <unistd.h>
 
 # define HEIGHT 750
 # define WIDTH 1280
